@@ -1,0 +1,12 @@
+#############
+## MATLAB/Simulink
+#############
+
+# Code generation byproducts
+slprj/
+*_rtw
+*.bin
+*.elf
+*.exe
+*.hex
+*.mexw*
