@@ -11,7 +11,7 @@ classdef bluetoothOut < matlab.System & coder.ExternalDependency
             % Implement tasks that need to be performed only once,
             % such as pre-computed constants.
             if coder.target('Rtw')% done only for code gen
-                coder.cinclude('bluetooth.h');
+                %coder.cinclude('bluetooth.h');
                 coder.ceval('btInit', obj.baudRate);
             end
         end
@@ -22,11 +22,6 @@ classdef bluetoothOut < matlab.System & coder.ExternalDependency
                 b = single(0);
                 b = coder.ceval('btIsPaired');
                 if b
-%                     if size(data, 1) == 1
-%                         data = [data uint8([13 10])]; % '\r\n'
-%                     else
-%                         data = [data; uint8([13; 10])]; % '\r\n'
-%                     end
                     coder.ceval('btSendBytes', data, length(data));
                 end
             end
@@ -52,10 +47,8 @@ classdef bluetoothOut < matlab.System & coder.ExternalDependency
         % Update the build-time buildInfo
         function updateBuildInfo(buildInfo, context)
             if context.isCodeGenTarget('rtw')
-                blockRoot = 'C:/Users/dc315/FreedomBT';
-                buildInfo.addIncludePaths({[blockRoot, '/include']});
-                %buildInfo.addIncludeFiles({'bluetooth.h'});
-                buildInfo.addSourcePaths({[blockRoot, '/src']});
+                buildInfo.addIncludePaths({'../include'});
+                buildInfo.addSourcePaths({'../src'});
                 buildInfo.addSourceFiles({'bluetooth.cpp'});
             end
         end

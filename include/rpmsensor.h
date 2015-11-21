@@ -1,5 +1,7 @@
 void rpmInit();
 
-float getRpm();
+float getLeftRpm();
+
+float getRightRpm();
 
 void rpmRelease();

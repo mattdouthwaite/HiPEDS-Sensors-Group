@@ -11,11 +11,13 @@ classdef rpmSensor < matlab.System & coder.ExternalDependency
             end
         end
         
-        function rpm = stepImpl(~)
-            rpm = 0;
+        function [leftRpm, rightRpm] = stepImpl(~)
+            leftRpm = 0;
+            rightRpm = 0;
             if coder.target('Rtw')% done only for code gen
                 coder.cinclude('rpmsensor.h');
-                rpm = coder.ceval('getRpm');
+                leftRpm = coder.ceval('getLeftRpm');
+                rightRpm = coder.ceval('getRightRpm');
             end
         end
         
@@ -39,9 +41,8 @@ classdef rpmSensor < matlab.System & coder.ExternalDependency
         % Update the build-time buildInfo
         function updateBuildInfo(buildInfo, context)
             if context.isCodeGenTarget('rtw')
-                blockRoot = 'C:/Users/dc315/FreedomBT';
-                buildInfo.addIncludePaths({[blockRoot, '/include']});
-                buildInfo.addSourcePaths({[blockRoot, '/src']});
+                buildInfo.addIncludePaths({'../include'});
+                buildInfo.addSourcePaths({'../src'});
                 buildInfo.addSourceFiles({'rpmsensor.cpp'});
             end
         end

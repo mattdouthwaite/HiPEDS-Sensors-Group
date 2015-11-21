@@ -3,35 +3,70 @@
 #define SAMPLE_TIME     0.01 // Seconds
 #define NUM_TRIGGERS    4 // Number of triggers counted for each revolution
 
-InterruptIn sensor(PTA4);
 Ticker timer;
 int binIndex;
-int counts[NUM_SAMPLES];
 
-void incCount() {
-    counts[binIndex % NUM_SAMPLES]++;
+InterruptIn leftSensor(PTA4);
+InterruptIn rightSensor(PTA5);
+int leftCounts[NUM_SAMPLES];
+int rightCounts[NUM_SAMPLES];
+float weights[NUM_SAMPLES];
+
+void incLeftCount() {
+    leftCounts[binIndex % NUM_SAMPLES]++;
 }
 
-void incbinIndex() {
+void incRightCount() {
+    rightCounts[binIndex % NUM_SAMPLES]++;
+}
+
+void incBinIndex() {
     binIndex++;
-    counts[binIndex % NUM_SAMPLES] = 0;
+    leftCounts[binIndex % NUM_SAMPLES] = 0;
+    rightCounts[binIndex % NUM_SAMPLES] = 0;
+}
+
+void initWeights() {
+    float timeRate = 0.2; // seconds
+    float rate = SAMPLE_TIME / timeRate;
+    for (int i = 0; i < NUM_SAMPLES; i++) {
+        weights[i] = exp(-rate * (float) i);
+    }
+    float sum = 0;
+    for (int i = 0; i < NUM_SAMPLES; i++) {
+        sum += weights[i];
+    }
+    for (int i = 0; i < NUM_SAMPLES; i++) {
+        weights[i] /= sum;
+    }
 }
 
 extern "C" void rpmInit() {
     for (int i = 0; i < NUM_SAMPLES; i++) {
-        counts[i] = 0;
+        leftCounts[i]  = 0;
+        rightCounts[i] = 0;
     }
-    sensor.fall(&incCount);
-    timer.attach(&incbinIndex, SAMPLE_TIME);
+    initWeights();
+    leftSensor.fall(&incLeftCount);
+    rightSensor.fall(&incRightCount);
+    timer.attach(&incBinIndex, SAMPLE_TIME);
 }
 
-extern "C" float getRpm() {
+float getRpm(int* counts) {
     int total = 0;
     for (int i = 0; i < NUM_SAMPLES; i++) {
-        total += counts[i];
+        total += weights[i] * counts[(binIndex - i) % NUM_SAMPLES];
     }
-    float freq = (float) total / ((float) NUM_SAMPLES * SAMPLE_TIME);
+    float freq = (float) total / SAMPLE_TIME;
     return 60 * freq / NUM_TRIGGERS;
+}
+
+extern "C" float getLeftRpm() {
+    return getRpm(leftCounts);
+}
+
+extern "C" float getRightRpm() {
+    return getRpm(rightCounts);
 }
 
 extern "C" void rpmRelease() {

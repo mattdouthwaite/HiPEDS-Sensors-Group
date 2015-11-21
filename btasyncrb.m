@@ -200,7 +200,7 @@ sizeOfData = block.OutputPort(1).DataStorageSize;
 callback = @(bt,evt) readAndSetData(...
     block, serialObj, sizeOfData, block.OutputPort(1).Datatype);
 serialObj.BytesAvailableFcnMode  = 'byte';
-serialObj.BytesAvailableFcnCount = sizeOfData;
+serialObj.BytesAvailableFcnCount = 2 * (sizeOfData + 8);
 serialObj.BytesAvailableFcn      = callback;
 
 disp(serialObj);
@@ -213,33 +213,27 @@ end
 function readAndSetData(block, bt, numBytes, datatype)
 disp('readAndSetData()');
 % Fixed implementation for size double modify for other data types
-temp= uint8(fread(bt, 8)); % Read double (8 bytes)
-while (true)
-    if (typecast (temp,datatype)==77554433) % check header
+temp = uint8(fread(bt, 8)); % Read double (8 bytes)
+for i = 1:100
+    disp(i-1);
+    if (typecast(temp,datatype) == 77554433) % check header
         break;
     else
-        circshift(temp,1); % shift to mimic FIFO buffer
-        temp(8)=uint8(fread(bt, 1)); % readone more byte 
+        %temp(1) = [];
+        temp = circshift(temp, -1); % shift to mimic FIFO buffer
+        temp(8) = uint8(fread(bt, 1)); % readone more byte 
     end
 end
-%temp= uint8(fread(bt, 8));
 
-if (temp==77554433)
-    data = typecast(uint8(fread(bt, numBytes)), datatype);
-    block.Dwork(1).Data = data;
-else
-   
-    temp(8)=uint8(fread(bt, 1)); 
+data = typecast(uint8(fread(bt, numBytes)), datatype);
+block.Dwork(1).Data = data;
 end
-%disp(data);
-end
-%% Function to allign bits 
 
 %% Outputs - Generate block outputs at every timestep.
 function Outputs(block)
-disp('Outputs()');
+%disp('Outputs()');
 data = block.Dwork(1).Data;
-disp(data);
+%disp(data);
 block.OutputPort(1).Data = data;
 end
 % endfunction Outputs

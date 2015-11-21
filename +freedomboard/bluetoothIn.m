@@ -48,10 +48,8 @@ classdef bluetoothIn < matlab.System & coder.ExternalDependency
         % Update the build-time buildInfo
         function updateBuildInfo(buildInfo, context)
             if context.isCodeGenTarget('rtw')
-                blockRoot = 'C:/Users/dc315/FreedomBT';
-                buildInfo.addIncludePaths({[blockRoot, '/include']});
-                %buildInfo.addIncludeFiles({'bluetooth.h'});
-                buildInfo.addSourcePaths({[blockRoot, '/src']});
+                buildInfo.addIncludePaths({'../include'});
+                buildInfo.addSourcePaths({'../src'});
                 buildInfo.addSourceFiles({'bluetooth.cpp'});
             end
         end
