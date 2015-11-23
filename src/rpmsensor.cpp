@@ -1,5 +1,5 @@
 #include "mbed.h"
-#define NUM_SAMPLES     60
+#define NUM_SAMPLES     200
 #define SAMPLE_TIME     0.01 // Seconds
 #define NUM_TRIGGERS    4 // Number of triggers counted for each revolution
 
@@ -27,7 +27,7 @@ void incBinIndex() {
 }
 
 void initWeights() {
-    float timeRate = 0.2; // seconds
+    float timeRate = 0.5; // seconds
     float rate = SAMPLE_TIME / timeRate;
     for (int i = 0; i < NUM_SAMPLES; i++) {
         weights[i] = exp(-rate * (float) i);
@@ -53,9 +53,9 @@ extern "C" void rpmInit() {
 }
 
 float getRpm(int* counts) {
-    int total = 0;
+    float total = 0;
     for (int i = 0; i < NUM_SAMPLES; i++) {
-        total += weights[i] * counts[(binIndex - i) % NUM_SAMPLES];
+        total += weights[i] * (float) counts[(binIndex - i) % NUM_SAMPLES];
     }
     float freq = (float) total / SAMPLE_TIME;
     return 60 * freq / NUM_TRIGGERS;

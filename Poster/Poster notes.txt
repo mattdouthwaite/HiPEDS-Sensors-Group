@@ -1,0 +1,63 @@
+Purpose:
+- Showcase the work we've done
+- Get our work assessed
+- Give a high-level view of the resources we're providing
+
+Audience:
+- Ben and Krysia (for marking)
+- HiPEDS advisory board + Freescale + MathWorks
+__________
+
+*** What we've done:
+
+Bluetooth:
+- Ben bought us two HC-05
+- We bought a regular USB Bluetooth dongle
+- We bought wires and connectors
+- Hardware connections to the Freedom board
+- C + MATLAB code and Simulink block to transmit data from the car
+- Simulink block to pack data into byte packet structure
+- MATLAB code and Simulink block to receive, synchronize and unpack data on the PC
+- Simulink Bluetooth library
+
+RPM Sensor:
+- Chose type of sensor (Hall Effect)
+- Chose and bought the HES: A1120EUA-T
+- Chose and bought the magnets: 2x1mm N42 neodymium magnets
+- Hardware connections to the Freedom board
+- Established a way to attach magnets to wheels
+- Developed an algorithm to estimate the angular speed from the sensor's digital signal
+- C + MATLAB code and Simulink block to read left/right wheel RPM
+
+Ambient Light Sensor:
+- Chose and bought the light sensor
+- Hardware connections to the Freedom board
+- Simulink block to condition raw sensor input
+
+- Simulink sensor library
+
+Deliverables:
+- Bluetooth and sensors Simulink libraries
+- Hardware guidelines on how to physically set up and connect the BT module and sensors
+__________
+
+Typical structure:
+-Intro
+-Problem
+-Conclusion
+-Results
+-Methods
+
+Our structure so far:
+-Intro (+ problem & high-level solution)
+-BT comm.
+-RPM sensor
+-AL sensor
+-Results and deliverables
+
+
+
+digital HES which acts as a magnetic field detector:
+contactless
+highly sensitive
+robust

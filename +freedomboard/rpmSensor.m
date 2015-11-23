@@ -12,12 +12,14 @@ classdef rpmSensor < matlab.System & coder.ExternalDependency
         end
         
         function [leftRpm, rightRpm] = stepImpl(~)
-            leftRpm = 0;
-            rightRpm = 0;
+            leftRpm = double(0);
+            rightRpm = double(0);
             if coder.target('Rtw')% done only for code gen
                 coder.cinclude('rpmsensor.h');
                 leftRpm = coder.ceval('getLeftRpm');
                 rightRpm = coder.ceval('getRightRpm');
+                leftRpm = double(leftRpm);
+                rightRpm = double(rightRpm);
             end
         end
         
