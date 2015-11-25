@@ -1,0 +1,37 @@
+Intro
+- Context (Freescale Cup)
+- Problem
+- Our solution
+
+Bluetooth
+- Why BT?
+- Why HC-05?
+- General principles of BT comm. (serial, async.)
+- Problems with async. comm. (misaligned bytes)
+- Our proposed packet structure
+- Step-by-step connection (show sine>pack>BT Tx ))) PC BT Rx)
+
+Additional Sensors
+- Now that we have a reliable comm. link, we thought of adding more sources of data
+- Improve closed-loop control with additional sensors
+
+RPM Sensor
+- Direct feedback for how fast each wheel is spinning in response to the motors' control signal
+- Contactless rotation counter
+- IR vs. HE
+- Algorithm
+
+Ambient Light Sensor
+- Motivation
+- Analogue photodiode sensitive to visible light
+- Hightlight how easy it is to incorporate new types of sensor
+
+Deliverables
+- Hardware guidelines
+- Bluetooth Simulink blocks
+- Sensors Simulink blocks
+- High-level view (show complete model)
+
+Conclusion
+- Summary of what we did
+- Impact
